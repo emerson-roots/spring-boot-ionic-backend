@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.nelioalves.cursomc.domain.Categoria;
 import com.nelioalves.cursomc.repositories.CategoriaRepository;
+import com.nelioalves.cursomc.services.services.exceptions.ObjectNotFoundExceptionEmerson;
 
 @Service // service é anotação do spring aula 17 13:00
 public class CategoriaService {
@@ -21,11 +22,14 @@ public class CategoriaService {
 	// essa operação, vai no banco de dados, busca uma categoria com esse ID
 	// e ja retorna para mim o objeto pronto
 	// feito isso, basta eu mandar o meu metodo buscar, retornar este objeto
-	public Categoria buscar(Integer id) {
+	public Categoria buscar(Integer pId) {
 
-		Optional<Categoria> obj = repo.findById(id);
+		Optional<Categoria> obj = repo.findById(pId);
 
-		return obj.orElse(null);
+		// tratamento de excessao - caso faça busca no repositório e retorne nulo e
+		// LANÇA EXCESSAO personalizada para a camada de recurso
+		return obj.orElseThrow(() -> new ObjectNotFoundExceptionEmerson(
+				"Objeto não encontrado! Id: " + pId + ", Tipo: " + Categoria.class.getName()));
 	}
 
 }
