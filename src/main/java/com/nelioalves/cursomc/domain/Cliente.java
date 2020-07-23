@@ -16,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.nelioalves.cursomc.domain.enums.TipoCliente;
 
 //aula 22
@@ -35,6 +36,7 @@ public class Cliente implements Serializable {
 	// TipoCliente
 	private Integer tipo;
 
+	@JsonManagedReference//aula - 23 - protege contra serialização ciclica (quando uma entidade conhece a outra e vice e versa)
 	@OneToMany(mappedBy = "cliente")
 	private List<Endereco> enderecos = new ArrayList<>();
 
