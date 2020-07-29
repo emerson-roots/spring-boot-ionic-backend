@@ -1,4 +1,4 @@
-package com.nelioalves.cursomc.services.services.exceptions;
+package com.nelioalves.cursomc.services.exceptions;
 
 
 //aula 20 - implementação padrao de excessão personalizada

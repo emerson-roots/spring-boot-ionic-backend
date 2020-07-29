@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.nelioalves.cursomc.services.services.exceptions.ObjectNotFoundExceptionEmerson;
+import com.nelioalves.cursomc.services.exceptions.ObjectNotFoundExceptionEmerson;
 
 @ControllerAdvice // aula 20 - 12:15
 public class ResourceExceptionHandlerEmerson {

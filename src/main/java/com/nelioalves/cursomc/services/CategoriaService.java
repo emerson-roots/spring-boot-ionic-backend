@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.nelioalves.cursomc.domain.Categoria;
 import com.nelioalves.cursomc.repositories.CategoriaRepository;
-import com.nelioalves.cursomc.services.services.exceptions.ObjectNotFoundExceptionEmerson;
+import com.nelioalves.cursomc.services.exceptions.ObjectNotFoundExceptionEmerson;
 
 @Service // service é anotação do spring aula 17 13:00
 public class CategoriaService {

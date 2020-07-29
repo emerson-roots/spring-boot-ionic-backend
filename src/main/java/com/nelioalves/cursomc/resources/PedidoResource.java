@@ -8,15 +8,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nelioalves.cursomc.domain.Cliente;
-import com.nelioalves.cursomc.services.ClienteService;
+import com.nelioalves.cursomc.domain.Pedido;
+import com.nelioalves.cursomc.services.PedidoService;
 
 @RestController
-@RequestMapping(value = "/clientes") // aula 14
-public class ClienteResource {
+@RequestMapping(value = "/pedidos") // aula 14
+public class PedidoResource {
 
 	@Autowired
-	private ClienteService service;
+	private PedidoService service;
 
 	// aula 17 - endpoint - pela id da categoria
 	// necessário o atributo value="/{id}"
@@ -30,7 +30,7 @@ public class ClienteResource {
 		// acessa serviço - que por sua vez, ira acessar
 		// o objeto de acesso a dados que é o repository
 		// implementando a lógica de camadas
-		Cliente obj = service.buscar(id);
+		Pedido obj = service.buscar(id);
 		
 		//ResponseEntity.ok().body(obj) - diz q a operação ocorreu com sucesso e a respota
 		//tem como corpo o objeto categoria
