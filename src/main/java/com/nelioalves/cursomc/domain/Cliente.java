@@ -14,8 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nelioalves.cursomc.domain.enums.TipoCliente;
 
 //aula 22
@@ -29,13 +28,13 @@ public class Cliente implements Serializable {
 	private String nome;
 	private String email;
 	private String cpfOuCnpj;
+	
 	// Aula 22 - 15:00 - armazena o enum (codigo) do TipoCliente - necessário
 	// alterar construtores e gets e sets padroes
 	// ela armazena no banco um tipo inteiro porém deve expor para o usuario o enum
 	// TipoCliente
 	private Integer tipo;
 
-	@JsonManagedReference//aula - 23 - protege contra serialização ciclica (quando uma entidade conhece a outra e vice e versa)
 	@OneToMany(mappedBy = "cliente")
 	private List<Endereco> enderecos = new ArrayList<>();
 
@@ -45,7 +44,7 @@ public class Cliente implements Serializable {
 	private Set<String> telefones = new HashSet<>();
 	
 	//coleções nao coloca em construtores
-	@JsonBackReference//os pedidos de um cliente nao vao ser serializados
+	@JsonIgnore
 	@OneToMany(mappedBy = "cliente")
 	private List<Pedido> pedidos = new ArrayList<>();
 

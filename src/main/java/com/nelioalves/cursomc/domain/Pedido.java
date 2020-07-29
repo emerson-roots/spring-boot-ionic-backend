@@ -16,44 +16,41 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Pedido implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	
+
 	@JsonFormat(pattern = "dd/MM/yyyy HH:mm")
 	private Date instante;
-	
-	@JsonManagedReference
-	@OneToOne(cascade = CascadeType.ALL, mappedBy = "pedido")//aula 26 - mapeamento bidirecional 1 para 1 garantindo que o id do pagamento sera o mesmo do pedido correspondente a ele
+
+	@OneToOne(cascade = CascadeType.ALL, mappedBy = "pedido") // aula 26 - mapeamento bidirecional 1 para 1 garantindo
+																// que o id do pagamento sera o mesmo do pedido
+																// correspondente a ele
 	private Pagamento pagamento;
-	
-	@JsonManagedReference
+
 	@ManyToOne
 	@JoinColumn(name = "cliente_id")
 	private Cliente cliente;
-	
-	
+
 	@ManyToOne
 	@JoinColumn(name = "endereco_de_entrega_id")
 	private Endereco enderecoDeEntrega;
-	
-	
-	//set é usado para que ajude a garantir que nao hapa item repetido no mesmo pedido
+
+	// set é usado para que ajude a garantir que nao hapa item repetido no mesmo
+	// pedido
 	@OneToMany(mappedBy = "id.pedido")
 	private Set<ItemPedido> itens = new HashSet<>();
-	
-	
+
 	public Pedido() {
-		
+
 	}
 
-	//construtor modificado na aula 27 - excluindo parametro de Pagamento
+	// construtor modificado na aula 27 - excluindo parametro de Pagamento
 	public Pedido(Integer id, Date instante, Cliente cliente, Endereco enderecoDeEntrega) {
 		super();
 		this.id = id;
@@ -62,54 +59,41 @@ public class Pedido implements Serializable {
 		this.enderecoDeEntrega = enderecoDeEntrega;
 	}
 
-	
-
-	
-
 	public Integer getId() {
 		return id;
 	}
-
 
 	public void setId(Integer id) {
 		this.id = id;
 	}
 
-
 	public Date getInstante() {
 		return instante;
 	}
-
 
 	public void setInstante(Date instante) {
 		this.instante = instante;
 	}
 
-
 	public Pagamento getPagamento() {
 		return pagamento;
 	}
-
 
 	public void setPagamento(Pagamento pagamento) {
 		this.pagamento = pagamento;
 	}
 
-
 	public Cliente getCliente() {
 		return cliente;
 	}
-
 
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
 	}
 
-
 	public Endereco getEnderecoDeEntrega() {
 		return enderecoDeEntrega;
 	}
-
 
 	public void setEnderecoDeEntrega(Endereco enderecoDeEntrega) {
 		this.enderecoDeEntrega = enderecoDeEntrega;
@@ -122,7 +106,7 @@ public class Pedido implements Serializable {
 	public void setItens(Set<ItemPedido> itens) {
 		this.itens = itens;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -130,7 +114,6 @@ public class Pedido implements Serializable {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -148,9 +131,5 @@ public class Pedido implements Serializable {
 			return false;
 		return true;
 	}
-
-	
-	
-	
 
 }

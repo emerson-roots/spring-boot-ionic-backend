@@ -15,7 +15,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -28,14 +27,15 @@ public class Produto implements Serializable {
 	private String nome;
 	private Double preco;
 
-	@JsonBackReference // aula 20
+	@JsonIgnore
 	@ManyToMany // aula 19 -10:21 - relação Muitos para muitoos
 	@JoinTable(name = "PRODUTO_CATEGORIA", joinColumns = @JoinColumn(name = "produto_id"), inverseJoinColumns = @JoinColumn(name = "categoria_id")
 
 	) // aula 19 -10:21 - relação Muitos para muitoos
 	private List<Categoria> categorias = new ArrayList<>();
-	
-	//set é usado para que ajude a garantir que nao hapa item repetido no mesmo pedido
+
+	// set é usado para que ajude a garantir que nao hapa item repetido no mesmo
+	// pedido
 	@JsonIgnore
 	@OneToMany(mappedBy = "id.produto")
 	private Set<ItemPedido> itens = new HashSet<>();
@@ -51,21 +51,21 @@ public class Produto implements Serializable {
 		this.preco = preco;
 	}
 
-	//o nome do metodo inicia com get mas nao tem nada haver com getters e setters
-	//o nome foi dado para seguir o padrão do java beans
+	// o nome do metodo inicia com get mas nao tem nada haver com getters e setters
+	// o nome foi dado para seguir o padrão do java beans
 	@JsonIgnore
-	public List<Pedido> getPedidos(){
-		
+	public List<Pedido> getPedidos() {
+
 		List<Pedido> lista = new ArrayList<>();
-		
+
 		for (ItemPedido itemPedido : itens) {
 			lista.add(itemPedido.getPedido());
 		}
-		
+
 		return lista;
-		
+
 	}
-	
+
 	public Integer getId() {
 		return id;
 	}
@@ -105,7 +105,7 @@ public class Produto implements Serializable {
 	public void setItens(Set<ItemPedido> itens) {
 		this.itens = itens;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -130,7 +130,5 @@ public class Produto implements Serializable {
 			return false;
 		return true;
 	}
-
-	
 
 }
