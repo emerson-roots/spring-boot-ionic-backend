@@ -2,7 +2,9 @@ package com.nelioalves.cursomc.domain;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -30,6 +33,10 @@ public class Produto implements Serializable {
 
 	) // aula 19 -10:21 - relação Muitos para muitoos
 	private List<Categoria> categorias = new ArrayList<>();
+	
+	//set é usado para que ajude a garantir que nao hapa item repetido no mesmo pedido
+	@OneToMany(mappedBy = "id.produto")
+	private Set<ItemPedido> itens = new HashSet<>();
 
 	public Produto() {
 
@@ -42,6 +49,20 @@ public class Produto implements Serializable {
 		this.preco = preco;
 	}
 
+	//o nome do metodo inicia com get mas nao tem nada haver com getters e setters
+	//o nome foi dado para seguir o padrão do java beans
+	public List<Pedido> getPedidos(){
+		
+		List<Pedido> lista = new ArrayList<>();
+		
+		for (ItemPedido itemPedido : itens) {
+			lista.add(itemPedido.getPedido());
+		}
+		
+		return lista;
+		
+	}
+	
 	public Integer getId() {
 		return id;
 	}
@@ -74,6 +95,14 @@ public class Produto implements Serializable {
 		this.categorias = categorias;
 	}
 
+	public Set<ItemPedido> getItens() {
+		return itens;
+	}
+
+	public void setItens(Set<ItemPedido> itens) {
+		this.itens = itens;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -98,5 +127,7 @@ public class Produto implements Serializable {
 			return false;
 		return true;
 	}
+
+	
 
 }
