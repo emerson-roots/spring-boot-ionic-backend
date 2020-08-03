@@ -3,10 +3,12 @@ package com.nelioalves.cursomc.services;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.nelioalves.cursomc.domain.Categoria;
 import com.nelioalves.cursomc.repositories.CategoriaRepository;
+import com.nelioalves.cursomc.services.exceptions.DataIntegrityExceptionEmerson;
 import com.nelioalves.cursomc.services.exceptions.ObjectNotFoundExceptionEmerson;
 
 @Service // service é anotação do spring aula 17 13:00
@@ -32,16 +34,28 @@ public class CategoriaService {
 				"Objeto não encontrado! Id: " + pId + ", Tipo: " + Categoria.class.getName()));
 	}
 
-	//aula 34
+	// aula 34
 	public Categoria insert(Categoria obj) {
-		obj.setId(null);//garante que o novo objeto a ser inserido tem id nulo, caso contrario entende como uma atualização
+		obj.setId(null);// garante que o novo objeto a ser inserido tem id nulo, caso contrario entende
+						// como uma atualização
 		return repo.save(obj);
 	}
-	
-	//aula 35 - seção 3
+
+	// aula 35 - seção 3
 	public Categoria update(Categoria obj) {
-		//chama o metodo de busca para verificar se o id existe
+		// chama o metodo de busca para verificar se o id existe
 		find(obj.getId());
 		return repo.save(obj);
+	}
+
+	// aula 36
+	public void delete(Integer id) {
+		find(id);
+		try {
+			repo.deleteById(id);
+		} catch (DataIntegrityViolationException e) {
+			throw new DataIntegrityExceptionEmerson("Não é possível excluir uma categoria que possui produtos");//lembrar que é uma excessão personalizada
+		}
+
 	}
 }
