@@ -25,12 +25,12 @@ public class ClienteResource {
 	// @PathVariable pega a variavel da URL {id} e passa para o parametro do metodo
 	// find
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET) // aula 14
-	public ResponseEntity<?> find(@PathVariable Integer id) {
+	public ResponseEntity<Cliente> find(@PathVariable Integer id) {
 
 		// acessa serviço - que por sua vez, ira acessar
 		// o objeto de acesso a dados que é o repository
 		// implementando a lógica de camadas
-		Cliente obj = service.buscar(id);
+		Cliente obj = service.find(id);
 		
 		//ResponseEntity.ok().body(obj) - diz q a operação ocorreu com sucesso e a respota
 		//tem como corpo o objeto categoria

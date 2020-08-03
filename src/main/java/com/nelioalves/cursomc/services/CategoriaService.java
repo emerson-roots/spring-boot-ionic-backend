@@ -22,7 +22,7 @@ public class CategoriaService {
 	// essa operação, vai no banco de dados, busca uma categoria com esse ID
 	// e ja retorna para mim o objeto pronto
 	// feito isso, basta eu mandar o meu metodo buscar, retornar este objeto
-	public Categoria buscar(Integer pId) {
+	public Categoria find(Integer pId) {
 
 		Optional<Categoria> obj = repo.findById(pId);
 
@@ -38,4 +38,10 @@ public class CategoriaService {
 		return repo.save(obj);
 	}
 	
+	//aula 35 - seção 3
+	public Categoria update(Categoria obj) {
+		//chama o metodo de busca para verificar se o id existe
+		find(obj.getId());
+		return repo.save(obj);
+	}
 }

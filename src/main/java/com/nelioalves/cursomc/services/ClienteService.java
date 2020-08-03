@@ -22,7 +22,7 @@ public class ClienteService {
 	// essa operação, vai no banco de dados, busca uma categoria com esse ID
 	// e ja retorna para mim o objeto pronto
 	// feito isso, basta eu mandar o meu metodo buscar, retornar este objeto
-	public Cliente buscar(Integer pId) {
+	public Cliente find(Integer pId) {
 
 		Optional<Cliente> obj = repo.findById(pId);
 

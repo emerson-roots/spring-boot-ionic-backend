@@ -22,7 +22,7 @@ public class PedidoService {
 	// essa operação, vai no banco de dados, busca uma categoria com esse ID
 	// e ja retorna para mim o objeto pronto
 	// feito isso, basta eu mandar o meu metodo buscar, retornar este objeto
-	public Pedido buscar(Integer pId) {
+	public Pedido find(Integer pId) {
 
 		Optional<Pedido> obj = repo.findById(pId);
 

@@ -1,6 +1,5 @@
 package com.nelioalves.cursomc.resources;
 
-
 import java.net.URI;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,30 +28,40 @@ public class CategoriaResource {
 	// @PathVariable pega a variavel da URL {id} e passa para o parametro do metodo
 	// find
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET) // aula 14
-	public ResponseEntity<?> find(@PathVariable Integer id) {
+	public ResponseEntity<Categoria> find(@PathVariable Integer id) {
 
 		// acessa serviço - que por sua vez, ira acessar
 		// o objeto de acesso a dados que é o repository
 		// implementando a lógica de camadas
-		Categoria obj = service.buscar(id);
-		
-		//ResponseEntity.ok().body(obj) - diz q a operação ocorreu com sucesso e a respota
-		//tem como corpo o objeto categoria
+		Categoria obj = service.find(id);
+
+		// ResponseEntity.ok().body(obj) - diz q a operação ocorreu com sucesso e a
+		// respota
+		// tem como corpo o objeto categoria
 		return ResponseEntity.ok().body(obj);
 
 	}
-	
-	//aula 34
-	@RequestMapping(method=RequestMethod.POST)
-	public ResponseEntity<Void> insert(@RequestBody Categoria obj){//@RequestBody faz o Json ser convertido para o objeto java automaticamente
-		
+
+	// aula 34
+	@RequestMapping(method = RequestMethod.POST)
+	public ResponseEntity<Void> insert(@RequestBody Categoria obj) {// @RequestBody faz o Json ser convertido para o
+																	// objeto java automaticamente
+
 		obj = service.insert(obj);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().
-				path("/{id}").buildAndExpand(obj.getId()).toUri();//URI do java.net
-		
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();// URI
+																														// do
+																														// java.net
+
 		return ResponseEntity.created(uri).build();
-		
+
 	}
-	
-	
+
+	// aula 35 seção 3
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<Void> update(@RequestBody Categoria obj, @PathVariable Integer id) {
+		obj.setId(id);
+		obj = service.update(obj);
+		return ResponseEntity.noContent().build();
+	}
+
 }
