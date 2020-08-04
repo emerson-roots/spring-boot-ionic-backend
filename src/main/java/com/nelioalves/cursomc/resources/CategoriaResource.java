@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -80,6 +82,19 @@ public class CategoriaResource {
 		List<Categoria> list = service.findAll();
 		// stream() - recurso do java 8 para percorrer listas
 		List<CategoriaDTO> listDto = list.stream().map(obj -> new CategoriaDTO(obj)).collect(Collectors.toList());
+		return ResponseEntity.ok().body(listDto);
+
+	}
+
+	// aula 38
+	@RequestMapping(value = "/page", method = RequestMethod.GET) // aula 14
+	public ResponseEntity<Page<CategoriaDTO>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer pPage,
+			@RequestParam(value = "linesPerPage", defaultValue = "24") Integer pLinesPerPage,
+			@RequestParam(value = "orderBy", defaultValue = "nome") String pOrderBy,
+			@RequestParam(value = "direction", defaultValue = "ASC") String pDirectionOrdenation) {
+
+		Page<Categoria> list = service.findPage(pPage, pLinesPerPage, pOrderBy, pDirectionOrdenation);
+		Page<CategoriaDTO> listDto = list.map(obj -> new CategoriaDTO(obj));
 		return ResponseEntity.ok().body(listDto);
 
 	}
