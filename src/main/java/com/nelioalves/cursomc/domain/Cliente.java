@@ -28,7 +28,7 @@ public class Cliente implements Serializable {
 	private String nome;
 	private String email;
 	private String cpfOuCnpj;
-	
+
 	// Aula 22 - 15:00 - armazena o enum (codigo) do TipoCliente - necessário
 	// alterar construtores e gets e sets padroes
 	// ela armazena no banco um tipo inteiro porém deve expor para o usuario o enum
@@ -42,8 +42,8 @@ public class Cliente implements Serializable {
 	@ElementCollection
 	@CollectionTable(name = "TELEFONE")
 	private Set<String> telefones = new HashSet<>();
-	
-	//coleções nao coloca em construtores
+
+	// coleções nao coloca em construtores
 	@JsonIgnore
 	@OneToMany(mappedBy = "cliente")
 	private List<Pedido> pedidos = new ArrayList<>();
@@ -58,7 +58,8 @@ public class Cliente implements Serializable {
 		this.nome = nome;
 		this.email = email;
 		this.cpfOuCnpj = cpfOuCnpj;
-		this.tipo = tipo.getCod(); // alterado para retornar o integer codigo
+		// se tipo for igual a nulo, atribui(?) null , caso contrario, atribui getCod(:)
+		this.tipo = (tipo == null) ? null : tipo.getCod(); // alterado para retornar o integer codigo
 	}
 
 	public Integer getId() {
@@ -117,7 +118,7 @@ public class Cliente implements Serializable {
 	public void setTelefones(Set<String> telefones) {
 		this.telefones = telefones;
 	}
-	
+
 	public List<Pedido> getPedidos() {
 		return pedidos;
 	}
@@ -150,7 +151,5 @@ public class Cliente implements Serializable {
 			return false;
 		return true;
 	}
-
-
 
 }
