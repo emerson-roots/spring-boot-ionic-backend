@@ -49,8 +49,9 @@ public class CategoriaService {
 	// aula 35 - seção 3
 	public Categoria update(Categoria obj) {
 		// chama o metodo de busca para verificar se o id existe
-		find(obj.getId());
-		return repo.save(obj);
+		Categoria newObj = find(obj.getId());
+		updateData(newObj, obj);
+		return repo.save(newObj);
 	}
 
 	// aula 36
@@ -59,26 +60,34 @@ public class CategoriaService {
 		try {
 			repo.deleteById(id);
 		} catch (DataIntegrityViolationException e) {
-			throw new DataIntegrityExceptionEmerson("Não é possível excluir uma categoria que possui produtos");//lembrar que é uma excessão personalizada
+			//excessão personalizada
+			throw new DataIntegrityExceptionEmerson("Não é possível excluir uma categoria que possui produtos");
 		}
 
 	}
-	
-	//aula 37
-	public List<Categoria> findAll(){
+
+	// aula 37
+	public List<Categoria> findAll() {
 		return repo.findAll();
 	}
-	
-	//aula 38
-	public Page<Categoria> findPage(Integer pPage, Integer pLinesPerPage, String pOrderBy, String pDirectionOrdenation){
-		//PageRequest do Spring Data
-		PageRequest pageRequest =  PageRequest.of(pPage, pLinesPerPage, Direction.valueOf(pDirectionOrdenation), pOrderBy);
+
+	// aula 38
+	public Page<Categoria> findPage(Integer pPage, Integer pLinesPerPage, String pOrderBy,
+			String pDirectionOrdenation) {
+		// PageRequest do Spring Data
+		PageRequest pageRequest = PageRequest.of(pPage, pLinesPerPage, Direction.valueOf(pDirectionOrdenation),
+				pOrderBy);
 		return repo.findAll(pageRequest);
 	}
-	
-	//aula 39
+
+	// aula 39
 	public Categoria fromDTO(CategoriaDTO objDto) {
 		return new Categoria(objDto.getId(), objDto.getNome());
 	}
-	
+
+	// aula 41
+	private void updateData(Categoria newObj, Categoria obj) {
+		newObj.setNome(obj.getNome());
+	}
+
 }
