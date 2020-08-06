@@ -70,7 +70,7 @@ public class ClienteService {
 			repo.deleteById(id);
 		} catch (DataIntegrityViolationException e) {
 			// lembrar que é uma excessão personalizada
-			throw new DataIntegrityExceptionEmerson("Não é possível excluir porque ha entidades relacionadas");
+			throw new DataIntegrityExceptionEmerson("Não é possível excluir porque ha pedidos relacionados");
 		}
 
 	}
