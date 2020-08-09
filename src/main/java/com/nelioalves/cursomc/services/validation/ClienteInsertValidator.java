@@ -6,12 +6,21 @@ import java.util.List;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.nelioalves.cursomc.domain.Cliente;
 import com.nelioalves.cursomc.domain.enums.TipoCliente;
 import com.nelioalves.cursomc.dto.ClienteNewDTO;
+import com.nelioalves.cursomc.repositories.ClienteRepository;
 import com.nelioalves.cursomc.resources.exceptions.FieldMessageEmerson;
 import com.nelioalves.cursomc.services.validation.utils.BR;
 
+//aula 45
 public class ClienteInsertValidator implements ConstraintValidator<ClienteInsert, ClienteNewDTO> {
+
+	@Autowired
+	private ClienteRepository repo;
+
 	@Override
 	public void initialize(ClienteInsert ann) {
 	}
@@ -19,15 +28,20 @@ public class ClienteInsertValidator implements ConstraintValidator<ClienteInsert
 	@Override
 	public boolean isValid(ClienteNewDTO objDto, ConstraintValidatorContext context) {
 		List<FieldMessageEmerson> list = new ArrayList<>();
-		
-		if(objDto.getTipo().equals(TipoCliente.PESSOAFISICA.getCod()) && !BR.isValidCPF(objDto.getCpfOuCnpj())){
-			list.add(new FieldMessageEmerson("cpfOuCnpj","CPF Inválido"));
+
+		if (objDto.getTipo().equals(TipoCliente.PESSOAFISICA.getCod()) && !BR.isValidCPF(objDto.getCpfOuCnpj())) {
+			list.add(new FieldMessageEmerson("cpfOuCnpj", "CPF Inválido"));
 		}
-		
-		if(objDto.getTipo().equals(TipoCliente.PESSOAJURIDICA.getCod()) && !BR.isValidCNPJ(objDto.getCpfOuCnpj())){
-			list.add(new FieldMessageEmerson("cpfOuCnpj","CNPJ Inválido"));
+
+		if (objDto.getTipo().equals(TipoCliente.PESSOAJURIDICA.getCod()) && !BR.isValidCNPJ(objDto.getCpfOuCnpj())) {
+			list.add(new FieldMessageEmerson("cpfOuCnpj", "CNPJ Inválido"));
 		}
-		
+
+		Cliente aux = repo.findByEmail(objDto.getEmail());
+		if (aux != null) {
+			list.add(new FieldMessageEmerson("email","Email já existente"));
+		}
+
 		// inclua os testes aqui, inserindo erros na lista
 		for (FieldMessageEmerson e : list) {
 			context.disableDefaultConstraintViolation();
