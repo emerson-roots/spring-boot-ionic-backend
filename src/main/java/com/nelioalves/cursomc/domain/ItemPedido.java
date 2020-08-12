@@ -43,6 +43,10 @@ public class ItemPedido implements Serializable {
 		return id.getPedido();
 	}
 	
+	//aula 53
+	public void setPedido(Pedido pedido) {
+		id.setPedido(pedido);
+	}
 	
 	public Produto getProduto() {
 		return id.getProduto();
@@ -51,7 +55,12 @@ public class ItemPedido implements Serializable {
 	public ItemPedidoPK getId() {
 		return id;
 	}
-
+	
+	//aula 53
+	public void setProduto(Produto produto) {
+		id.setProduto(produto);
+	}
+	
 	public void setId(ItemPedidoPK id) {
 		this.id = id;
 	}
