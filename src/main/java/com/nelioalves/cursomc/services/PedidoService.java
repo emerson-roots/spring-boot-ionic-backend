@@ -39,6 +39,9 @@ public class PedidoService {
 	
 	@Autowired
 	private ClienteService clienteService;
+	
+	@Autowired
+	private EmailService emailService;
 
 	// aula 17 - 13:30 operação capaz de buscar uma CATEGORIA por código/id
 	// essa operação, vai no banco de dados, busca uma categoria com esse ID
@@ -85,7 +88,7 @@ public class PedidoService {
 		
 		//salva itens de pedido
 		itemPedidoRepository.saveAll(obj.getItens());
-		System.out.println(obj);
+		emailService.sendOrderConfirmationEmail(obj);
 		return obj;
 	}
 

@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import com.nelioalves.cursomc.services.DBService;
+import com.nelioalves.cursomc.services.EmailService;
+import com.nelioalves.cursomc.services.MockMailService;
 
 //auça 56
 @Configuration
@@ -22,6 +24,12 @@ public class TestConfig {
 
 		dbService.instantiateTestDatabase();
 		return true;
+	}
+	
+	//aula 63
+	@Bean
+	public EmailService emailService() {
+		return new MockMailService();
 	}
 
 }
