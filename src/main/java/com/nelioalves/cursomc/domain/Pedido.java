@@ -31,9 +31,10 @@ public class Pedido implements Serializable {
 	@JsonFormat(pattern = "dd/MM/yyyy HH:mm")
 	private Date instante;
 
-	@OneToOne(cascade = CascadeType.ALL, mappedBy = "pedido") // aula 26 - mapeamento bidirecional 1 para 1 garantindo
-																// que o id do pagamento sera o mesmo do pedido
-																// correspondente a ele
+	// aula 26 - mapeamento bidirecional 1 para 1 garantindo
+	// que o id do pagamento sera o mesmo do pedido
+	// correspondente a ele
+	@OneToOne(cascade = CascadeType.ALL, mappedBy = "pedido") 
 	private Pagamento pagamento;
 
 	@ManyToOne

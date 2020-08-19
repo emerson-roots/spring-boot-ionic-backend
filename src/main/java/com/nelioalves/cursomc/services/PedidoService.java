@@ -90,7 +90,7 @@ public class PedidoService {
 		
 		//salva itens de pedido
 		itemPedidoRepository.saveAll(obj.getItens());
-		emailService.sendOrderConfirmationEmail(obj);
+		emailService.sendOrderConfirmationHtmlEmail(obj);
 		return obj;
 	}
 
