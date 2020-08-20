@@ -38,6 +38,11 @@ public class Cliente implements Serializable {
 	// ela armazena no banco um tipo inteiro porém deve expor para o usuario o enum
 	// TipoCliente
 	private Integer tipo;
+	
+
+	//aula 68
+	@JsonIgnore
+	private String senha;
 
 	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
 	private List<Endereco> enderecos = new ArrayList<>();
@@ -56,7 +61,7 @@ public class Cliente implements Serializable {
 
 	}
 
-	public Cliente(Integer id, String nome, String email, String cpfOuCnpj, TipoCliente tipo) {
+	public Cliente(Integer id, String nome, String email, String cpfOuCnpj, TipoCliente tipo, String senha) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -64,6 +69,7 @@ public class Cliente implements Serializable {
 		this.cpfOuCnpj = cpfOuCnpj;
 		// se tipo for igual a nulo, atribui(?) null , caso contrario, atribui getCod(:)
 		this.tipo = (tipo == null) ? null : tipo.getCod(); // alterado para retornar o integer codigo
+		this.senha = senha;
 	}
 
 	public Integer getId() {
@@ -106,6 +112,14 @@ public class Cliente implements Serializable {
 	public void setTipo(TipoCliente tipo) {
 		this.tipo = tipo.getCod();
 	}
+	
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
 
 	public List<Endereco> getEnderecos() {
 		return enderecos;
@@ -130,7 +144,7 @@ public class Cliente implements Serializable {
 	public void setPedidos(List<Pedido> pedidos) {
 		this.pedidos = pedidos;
 	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
