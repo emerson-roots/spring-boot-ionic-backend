@@ -3,6 +3,8 @@ package com.nelioalves.cursomc.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nelioalves.cursomc.domain.PagamentoComBoleto;
@@ -25,5 +27,16 @@ public class JacksonConfig {
 		};
 		return builder;
 
+	}
+	
+	/**
+	 * esta implementação não existe na aula
+	 * foi implementada a partir de um aluno
+	 * que inseriu como resposta a um erro que estava
+	 * ocorrendo na aula 68 ao testar o projeto
+	 * com o profile de test e com o H2 */
+	@Bean
+	public JavaMailSender jms (){
+		return new JavaMailSenderImpl();
 	}
 }
