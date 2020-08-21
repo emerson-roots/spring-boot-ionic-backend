@@ -19,6 +19,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.nelioalves.cursomc.security.JWTAuthenticationFilter;
+import com.nelioalves.cursomc.security.JWTAuthorizationFilter;
 import com.nelioalves.cursomc.security.JWTUtil;
 
 /**
@@ -37,19 +38,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private Environment env;
-	
-	//aula 71
+
+	// aula 71
 	@Autowired
 	private UserDetailsService userDetailsService;
-	
-	//aula72
+
+	// aula72
 	@Autowired
 	private JWTUtil jwtUtil;
 
 	private static final String[] PUBLIC_MATCHERS = { "/h2-console/**" };
 
 	// permite somente leitura
-	private static final String[] PUBLIC_MATCHERS_GET = { "/produtos/**", "/categorias/**","/clientes/**" };
+	private static final String[] PUBLIC_MATCHERS_GET = { "/produtos/**", "/categorias/**", "/clientes/**" };
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -68,31 +69,34 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		// e para todo o resto exige autenticação
 		http.authorizeRequests().antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
 				.antMatchers(PUBLIC_MATCHERS).permitAll().anyRequest().authenticated();
-		
-		//aula 72
+
+		// aula 72
 		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
+
+		// aula 73 - 17:27
+		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
 
 		// define que a aplicação é STATELESS - assegura que nosso back end nao cria
 		// seção de usuário
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
 
-	//aula 71
+	// aula 71
 	@Override
-	public void configure(AuthenticationManagerBuilder auth) throws Exception{
+	public void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
 	}
-	
+
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
 		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
 		return source;
 	}
-	
-	//aula 69
+
+	// aula 69
 	@Bean
-	public BCryptPasswordEncoder  bCryptPasswordEncoder(){
+	public BCryptPasswordEncoder bCryptPasswordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 }
