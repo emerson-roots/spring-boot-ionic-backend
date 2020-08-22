@@ -15,11 +15,14 @@ import org.springframework.transaction.annotation.Transactional;
 import com.nelioalves.cursomc.domain.Cidade;
 import com.nelioalves.cursomc.domain.Cliente;
 import com.nelioalves.cursomc.domain.Endereco;
+import com.nelioalves.cursomc.domain.enums.Perfil;
 import com.nelioalves.cursomc.domain.enums.TipoCliente;
 import com.nelioalves.cursomc.dto.ClienteDTO;
 import com.nelioalves.cursomc.dto.ClienteNewDTO;
 import com.nelioalves.cursomc.repositories.ClienteRepository;
 import com.nelioalves.cursomc.repositories.EnderecoRepository;
+import com.nelioalves.cursomc.security.UserSS;
+import com.nelioalves.cursomc.services.exceptions.AuthorizationExceptionEmerson;
 import com.nelioalves.cursomc.services.exceptions.DataIntegrityExceptionEmerson;
 import com.nelioalves.cursomc.services.exceptions.ObjectNotFoundExceptionEmerson;
 
@@ -31,10 +34,10 @@ public class ClienteService {
 	// de dependencia ou inversão de controle
 	@Autowired
 	private ClienteRepository repo;
-	
+
 	@Autowired
 	private EnderecoRepository enderecoRepository;
-	
+
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 
@@ -44,6 +47,20 @@ public class ClienteService {
 	// feito isso, basta eu mandar o meu metodo buscar, retornar este objeto
 	public Cliente find(Integer pId) {
 
+		/**
+		 * ===============================
+		 * 
+		 * aula 75
+		 * 
+		 * verifica se o usuario q tentamos buscar for = null ou se nao tiver perfil de
+		 * admin ou se o id for diferente do buscado
+		 */
+		UserSS user = UserService.authenticated();
+		if (user == null || !user.hasRole(Perfil.ADMIN) && !pId.equals(user.getId())) {
+			throw new AuthorizationExceptionEmerson("Acesso negado");
+		}
+		// ===============================
+
 		Optional<Cliente> obj = repo.findById(pId);
 
 		// tratamento de excessao - caso faça busca no repositório e retorne nulo e
@@ -52,7 +69,7 @@ public class ClienteService {
 				"Objeto não encontrado! Id: " + pId + ", Tipo: " + Cliente.class.getName()));
 	}
 
-	@Transactional//anotaçãoo aprendida na aula 43 
+	@Transactional // anotaçãoo aprendida na aula 43
 	public Cliente insert(Cliente obj) {
 		obj.setId(null);
 		obj = repo.save(obj);
@@ -91,7 +108,7 @@ public class ClienteService {
 	}
 
 	public Cliente fromDTO(ClienteDTO objDto) {
-		return new Cliente(objDto.getId(), objDto.getNome(), objDto.getEmail(), null, null,null);
+		return new Cliente(objDto.getId(), objDto.getNome(), objDto.getEmail(), null, null, null);
 	}
 
 	// sobrecarga do metodo só que agora recebendo um ClienteNewDTO

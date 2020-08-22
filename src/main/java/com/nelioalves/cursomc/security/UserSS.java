@@ -78,4 +78,13 @@ public class UserSS implements UserDetails {
 		return true;
 	}
 
+	/**
+	 * aula 75
+	 * 
+	 * testa se um usuário possui um perfil especifico (ADMIN OU CLIENTE
+	 */
+	public boolean hasRole(Perfil perfil) {
+		return getAuthorities().contains(new SimpleGrantedAuthority(perfil.getDescricao()));
+	}
+
 }

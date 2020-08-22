@@ -9,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.nelioalves.cursomc.services.exceptions.AuthorizationExceptionEmerson;
 import com.nelioalves.cursomc.services.exceptions.DataIntegrityExceptionEmerson;
 import com.nelioalves.cursomc.services.exceptions.ObjectNotFoundExceptionEmerson;
 
@@ -43,14 +44,27 @@ public class ResourceExceptionHandlerEmerson {
 			HttpServletRequest pRequest) {
 
 		// instancia novo erro padrao (objeto depende de outras classes/tabelas)
-		ValidationErrorEmerson err = new ValidationErrorEmerson(HttpStatus.BAD_REQUEST.value(), "Erro de validacao de campos",
-				System.currentTimeMillis());
-		
-		//percorre cada erro adicionando ao metodo personalizado addError
+		ValidationErrorEmerson err = new ValidationErrorEmerson(HttpStatus.BAD_REQUEST.value(),
+				"Erro de validacao de campos", System.currentTimeMillis());
+
+		// percorre cada erro adicionando ao metodo personalizado addError
 		for (FieldError x : e.getBindingResult().getFieldErrors()) {
 			err.addError(x.getField(), x.getDefaultMessage());
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+	}
+
+	/**
+	 * AULA 75
+	 * 
+	 */
+	@ExceptionHandler(AuthorizationExceptionEmerson.class)
+	public ResponseEntity<StandardErrorEmerson> authorizationEmerson(AuthorizationExceptionEmerson pNotFound,
+			HttpServletRequest pRequest) {
+
+		StandardErrorEmerson err = new StandardErrorEmerson(HttpStatus.FORBIDDEN.value(), pNotFound.getMessage(),
+				System.currentTimeMillis());
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(err);
 	}
 
 }
