@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,12 +50,17 @@ public class CategoriaResource {
 
 	}
 
+	// aula 74 - trabalha em conjunto com a anotação @EnableGlobalMethodSecurity na
+	// classe SecurityConfig
+	// tem a função de dar prioridades de acordo com os perfis de usuário, no caso
+	// perfis de administradores ADMIN
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	// aula 34
 	// @RequestBody faz o Json ser convertido para o objeto java automaticamente
-	//anotação @Valid da aula 39 - usada para validar objetos DTO
+	// anotação @Valid da aula 39 - usada para validar objetos DTO
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<Void> insert(@Valid @RequestBody CategoriaDTO objDto) {
-		
+
 		Categoria obj = service.fromDTO(objDto);
 		obj = service.insert(obj);
 		// URI do java.net
@@ -64,16 +70,26 @@ public class CategoriaResource {
 
 	}
 
+	// aula 74 - trabalha em conjunto com a anotação @EnableGlobalMethodSecurity na
+	// classe SecurityConfig
+	// tem a função de dar prioridades de acordo com os perfis de usuário, no caso
+	// perfis de administradores ADMIN
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	// aula 35 seção 3
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<Void> update(@Valid @RequestBody CategoriaDTO objDto, @PathVariable Integer id) {
-		
+
 		Categoria obj = service.fromDTO(objDto);
 		obj.setId(id);
 		obj = service.update(obj);
 		return ResponseEntity.noContent().build();
 	}
 
+	// aula 74 - trabalha em conjunto com a anotação @EnableGlobalMethodSecurity na
+	// classe SecurityConfig
+	// tem a função de dar prioridades de acordo com os perfis de usuário, no caso
+	// perfis de administradores ADMIN
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	// aula 36
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE) // aula 36
 	public ResponseEntity<Void> delete(@PathVariable Integer id) {

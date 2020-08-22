@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -34,6 +35,9 @@ import com.nelioalves.cursomc.security.JWTUtil;
 //aula 68
 @Configuration
 @EnableWebSecurity
+//aula 74 - anotação @EnableGlobalMethodSecurity trabalha em conjunto da @PreAuthorize("hasAnyRole('ADMIN')")
+//tem a função de autorizar endpoints de acordo com os perfis de usuario selecionado
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
@@ -50,7 +54,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private static final String[] PUBLIC_MATCHERS = { "/h2-console/**" };
 
 	// permite somente leitura
-	private static final String[] PUBLIC_MATCHERS_GET = { "/produtos/**", "/categorias/**", "/clientes/**" };
+	private static final String[] PUBLIC_MATCHERS_GET = { "/produtos/**", "/categorias/**" };
+
+	//aula 74
+	private static final String[] PUBLIC_MATCHERS_POST = { "/clientes/**" };
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -68,7 +75,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		// todos os caminhos que estiverem no vetor, será permitido
 		// e para todo o resto exige autenticação
 		http.authorizeRequests().antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
-				.antMatchers(PUBLIC_MATCHERS).permitAll().anyRequest().authenticated();
+				.antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_POST).permitAll().antMatchers(PUBLIC_MATCHERS).permitAll()
+				.anyRequest().authenticated();
 
 		// aula 72
 		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
