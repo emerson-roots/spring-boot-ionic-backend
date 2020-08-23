@@ -4,9 +4,13 @@ import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.nelioalves.cursomc.domain.Cliente;
 import com.nelioalves.cursomc.domain.ItemPedido;
 import com.nelioalves.cursomc.domain.PagamentoComBoleto;
 import com.nelioalves.cursomc.domain.Pedido;
@@ -14,6 +18,8 @@ import com.nelioalves.cursomc.domain.enums.EstadoPagamento;
 import com.nelioalves.cursomc.repositories.ItemPedidoRepository;
 import com.nelioalves.cursomc.repositories.PagamentoRepository;
 import com.nelioalves.cursomc.repositories.PedidoRepository;
+import com.nelioalves.cursomc.security.UserSS;
+import com.nelioalves.cursomc.services.exceptions.AuthorizationExceptionEmerson;
 import com.nelioalves.cursomc.services.exceptions.ObjectNotFoundExceptionEmerson;
 
 @Service // service é anotação do spring aula 17 13:00
@@ -24,26 +30,24 @@ public class PedidoService {
 	// de dependencia ou inversão de controle
 	@Autowired
 	private PedidoRepository repo;
-	
+
 	@Autowired
 	private BoletoService boletoService;
-	
+
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
-	
+
 	@Autowired
 	private ProdutoService produtoService;
-	
+
 	@Autowired
 	private ItemPedidoRepository itemPedidoRepository;
-	
+
 	@Autowired
 	private ClienteService clienteService;
-	
+
 	@Autowired
 	private EmailService emailService;
-	
-	
 
 	// aula 17 - 13:30 operação capaz de buscar uma CATEGORIA por código/id
 	// essa operação, vai no banco de dados, busca uma categoria com esse ID
@@ -59,39 +63,53 @@ public class PedidoService {
 				"Objeto não encontrado! Id: " + pId + ", Tipo: " + Pedido.class.getName()));
 	}
 
-
 	// aula 53
 	@Transactional
 	public Pedido insert(Pedido obj) {
 		obj.setId(null);
 		obj.setInstante(new Date());
-		//linha inserida na aula 62
+		// linha inserida na aula 62
 		obj.setCliente(clienteService.find(obj.getCliente().getId()));
 		obj.getPagamento().setEstadoPgto(EstadoPagamento.PENDENTE);
 		obj.getPagamento().setPedido(obj);
-		
-		if(obj.getPagamento() instanceof PagamentoComBoleto) {
+
+		if (obj.getPagamento() instanceof PagamentoComBoleto) {
 			PagamentoComBoleto pagto = (PagamentoComBoleto) obj.getPagamento();
-			boletoService.preencherPagamentoComBoleto(pagto,obj.getInstante());
+			boletoService.preencherPagamentoComBoleto(pagto, obj.getInstante());
 		}
-		
-		//salva pedido no banco
+
+		// salva pedido no banco
 		obj = repo.save(obj);
-		//salva pagamento no banco
+		// salva pagamento no banco
 		pagamentoRepository.save(obj.getPagamento());
-		
-		//adiciona itens de pedido ao pedido
-		for(ItemPedido ip: obj.getItens()) {
+
+		// adiciona itens de pedido ao pedido
+		for (ItemPedido ip : obj.getItens()) {
 			ip.setDesconto(0.0);
 			ip.setProduto(produtoService.find(ip.getProduto().getId()));
 			ip.setPreco(ip.getProduto().getPreco());
 			ip.setPedido(obj);
 		}
-		
-		//salva itens de pedido
+
+		// salva itens de pedido
 		itemPedidoRepository.saveAll(obj.getItens());
 		emailService.sendOrderConfirmationHtmlEmail(obj);
 		return obj;
+	}
+
+	// aula 76
+	public Page<Pedido> findPage(Integer pPage, Integer pLinesPerPage, String pOrderBy, String pDirectionOrdenation) {
+
+		UserSS user = UserService.authenticated();
+		if (user == null) {
+			throw new AuthorizationExceptionEmerson("Acesso negado");
+		}
+
+		PageRequest pageRequest = PageRequest.of(pPage, pLinesPerPage, Direction.valueOf(pDirectionOrdenation),
+				pOrderBy);
+		Cliente cliente = clienteService.find(user.getId());
+		return repo.findByCliente(cliente, pageRequest);
+
 	}
 
 }
