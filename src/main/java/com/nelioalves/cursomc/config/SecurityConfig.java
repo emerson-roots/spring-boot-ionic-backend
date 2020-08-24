@@ -56,8 +56,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	// permite somente leitura
 	private static final String[] PUBLIC_MATCHERS_GET = { "/produtos/**", "/categorias/**" };
 
-	//aula 74
-	private static final String[] PUBLIC_MATCHERS_POST = { "/clientes/**" };
+	// aula 74
+	private static final String[] PUBLIC_MATCHERS_POST = { "/clientes/**", "/auth/forgot/**" };
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -69,13 +69,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		}
 
 		// desabilita proteção de ataques a CSRF pois nosso sistema sera "STATELESS"
-		// que significa que nao armazena seção de usuário
+		// que significa que nao armazena sessão de usuário
 		http.cors().and().csrf().disable();
 
 		// todos os caminhos que estiverem no vetor, será permitido
 		// e para todo o resto exige autenticação
 		http.authorizeRequests().antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
-				.antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_POST).permitAll().antMatchers(PUBLIC_MATCHERS).permitAll()
+				.antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll().antMatchers(PUBLIC_MATCHERS).permitAll()
 				.anyRequest().authenticated();
 
 		// aula 72
@@ -85,7 +85,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
 
 		// define que a aplicação é STATELESS - assegura que nosso back end nao cria
-		// seção de usuário
+		// sessão de usuário
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
 
