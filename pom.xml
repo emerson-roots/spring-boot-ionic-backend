@@ -91,6 +91,21 @@
 			<version>0.7.0</version>
 		</dependency>
 
+		<!-- dependencias necessarias para o Amazon S3 -->
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk</artifactId>
+			<version>LATEST</version>
+		</dependency>
+
+		<!-- dependencias necessarias para o Amazon S3 - para extrairmos de forma 
+			simples a extensão dos arquivos -->
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>LATEST</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
