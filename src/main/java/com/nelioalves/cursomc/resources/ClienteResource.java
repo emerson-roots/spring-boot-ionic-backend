@@ -52,6 +52,13 @@ public class ClienteResource {
 
 	}
 
+	// aula 96 - faz a busca pelo email
+	@RequestMapping(value = "/email", method = RequestMethod.GET)
+	public ResponseEntity<Cliente> find(@RequestParam(value = "value") String email) {
+		Cliente obj = service.findByEmail(email);
+		return ResponseEntity.ok().body(obj);
+	}
+
 	// aula 34
 	// @RequestBody faz o Json ser convertido para o objeto java automaticamente
 	// anotação @Valid da aula 39 - usada para validar objetos DTO
@@ -116,4 +123,5 @@ public class ClienteResource {
 		return ResponseEntity.created(uri).build();
 
 	}
+
 }

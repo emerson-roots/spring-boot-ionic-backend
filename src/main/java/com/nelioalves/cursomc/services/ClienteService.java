@@ -118,6 +118,26 @@ public class ClienteService {
 		return repo.findAll();
 	}
 
+	// aula 96
+	public Cliente findByEmail(String email) {
+
+		// identifica o usuário logado/autenticado
+		UserSS user = UserService.authenticated();
+
+		// verifica see é igual a nulo ou nao for administrador e o email que esta
+		// procurando nao for o email do usuario logado
+		if (user == null || !user.hasRole(Perfil.ADMIN) && !email.equals(user.getUsername())) {
+			throw new AuthorizationExceptionEmerson("Acesso negado");
+		}
+
+		Cliente obj = repo.findByEmail(email);
+		if (obj == null) {
+			throw new ObjectNotFoundExceptionEmerson(
+					"Objeto não encontrado! Id: " + user.getId() + ", Tipo: " + Cliente.class.getName());
+		}
+		return obj;
+	}
+
 	public Page<Cliente> findPage(Integer pPage, Integer pLinesPerPage, String pOrderBy, String pDirectionOrdenation) {
 		// PageRequest do Spring Data
 		PageRequest pageRequest = PageRequest.of(pPage, pLinesPerPage, Direction.valueOf(pDirectionOrdenation),
