@@ -56,6 +56,9 @@ public class ClienteService {
 	@Value("${img.prefix.client.profile}")
 	private String prefix;
 
+	@Value("${img.profile.size}")
+	private Integer size;
+
 	// aula 17 - 13:30 operação capaz de buscar uma CATEGORIA por código/id
 	// essa operação, vai no banco de dados, busca uma categoria com esse ID
 	// e ja retorna para mim o objeto pronto
@@ -165,6 +168,10 @@ public class ClienteService {
 
 		// recebe a imagem da requisição
 		BufferedImage jpgImage = imageService.getJpgImageFromFile(multipartFile);
+
+		// aula 90 - recorta a imagem
+		jpgImage = imageService.cropSquare(jpgImage);
+		jpgImage = imageService.resize(jpgImage, size);
 
 		// monta o nome do arquivo de imagem
 		String fileName = prefix + user.getId() + ".jpg";
