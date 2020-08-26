@@ -75,6 +75,12 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		String username = ((UserSS) auth.getPrincipal()).getUsername();
 		String token = jwtUtil.generateToken(username);
 		res.addHeader("Authorization", "Bearer " + token);
+
+		/**
+		 * aula 93 - expoe o cabeçalho Authorization no header pois sem isto, a
+		 * aplicação/backend não consegue acessar os valores do cabeçalho
+		 */
+		res.addHeader("access-control-expose-headers", "Authorization");
 	}
 
 	// aula 71
