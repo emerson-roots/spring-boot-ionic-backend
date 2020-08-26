@@ -9,8 +9,12 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.amazonaws.AmazonClientException;
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.nelioalves.cursomc.services.exceptions.AuthorizationExceptionEmerson;
 import com.nelioalves.cursomc.services.exceptions.DataIntegrityExceptionEmerson;
+import com.nelioalves.cursomc.services.exceptions.FileExceptionEmerson;
 import com.nelioalves.cursomc.services.exceptions.ObjectNotFoundExceptionEmerson;
 
 @ControllerAdvice // aula 20 - 12:15
@@ -59,12 +63,69 @@ public class ResourceExceptionHandlerEmerson {
 	 * 
 	 */
 	@ExceptionHandler(AuthorizationExceptionEmerson.class)
-	public ResponseEntity<StandardErrorEmerson> authorizationEmerson(AuthorizationExceptionEmerson pNotFound,
+	public ResponseEntity<StandardErrorEmerson> authorizationEmerson(AuthorizationExceptionEmerson e,
 			HttpServletRequest pRequest) {
 
-		StandardErrorEmerson err = new StandardErrorEmerson(HttpStatus.FORBIDDEN.value(), pNotFound.getMessage(),
+		StandardErrorEmerson err = new StandardErrorEmerson(HttpStatus.FORBIDDEN.value(), e.getMessage(),
 				System.currentTimeMillis());
 		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(err);
+	}
+	
+	/**
+	 * AULA 87
+	 * 
+	 */
+	@ExceptionHandler(FileExceptionEmerson.class)
+	public ResponseEntity<StandardErrorEmerson> fileEmerson(FileExceptionEmerson e,
+			HttpServletRequest pRequest) {
+
+		StandardErrorEmerson err = new StandardErrorEmerson(HttpStatus.BAD_REQUEST.value(), e.getMessage(),
+				System.currentTimeMillis());
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+	}
+	
+	/**
+	 * aula 87
+	 * 
+	 * tratamento de exceção especifica da AMAZON
+	 * 
+	 * */
+	@ExceptionHandler(AmazonServiceException.class)
+	public ResponseEntity<StandardErrorEmerson> amazonServiceEmerson(AmazonServiceException e,
+			HttpServletRequest pRequest) {
+		
+		//armazena o status/exception HTTP especifico da amazon
+		HttpStatus code = HttpStatus.valueOf(e.getErrorCode());
+		
+		StandardErrorEmerson err = new StandardErrorEmerson(code.value(), e.getMessage(),
+				System.currentTimeMillis());
+		return ResponseEntity.status(code).body(err);
+	}
+	
+	/**
+	 * AULA 87
+	 * 
+	 */
+	@ExceptionHandler(AmazonClientException.class)
+	public ResponseEntity<StandardErrorEmerson> amazonClientEmerson(AmazonClientException e,
+			HttpServletRequest pRequest) {
+
+		StandardErrorEmerson err = new StandardErrorEmerson(HttpStatus.BAD_REQUEST.value(), e.getMessage(),
+				System.currentTimeMillis());
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+	}
+	
+	/**
+	 * AULA 87
+	 * 
+	 */
+	@ExceptionHandler(AmazonS3Exception.class)
+	public ResponseEntity<StandardErrorEmerson> amazonS3Emerson(AmazonS3Exception e,
+			HttpServletRequest pRequest) {
+
+		StandardErrorEmerson err = new StandardErrorEmerson(HttpStatus.BAD_REQUEST.value(), e.getMessage(),
+				System.currentTimeMillis());
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
 	}
 
 }
