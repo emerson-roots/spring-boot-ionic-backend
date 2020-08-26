@@ -92,11 +92,15 @@
 		</dependency>
 
 		<!-- dependencias necessarias para o Amazon S3 -->
+		<!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk -->
+		<!-- ATENÇÃO: A DENPENDENCIA SUGERIDA PELO PROFESSOR "LATEST" ESTAVA CAUSANDO 
+			ERROS, DEVIDO A ISTO FOI DADO UM DOWNGRADE DE VERSÃO PARA FUNCIONAR -->
 		<dependency>
 			<groupId>com.amazonaws</groupId>
 			<artifactId>aws-java-sdk</artifactId>
-			<version>LATEST</version>
+			<version>1.11.469</version>
 		</dependency>
+
 
 		<!-- dependencias necessarias para o Amazon S3 - para extrairmos de forma 
 			simples a extensão dos arquivos -->
