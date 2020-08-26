@@ -42,8 +42,8 @@ public class ClienteService {
 
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
-	
-	//aula 86
+
+	// aula 86
 	@Autowired
 	private S3Service s3Service;
 
@@ -144,10 +144,25 @@ public class ClienteService {
 		newObj.setNome(obj.getNome());
 		newObj.setEmail(obj.getEmail());
 	}
-	
-	//aula 86
+
+	// aula 86
 	public URI uploadProfilePicture(MultipartFile multipartFile) {
-		return s3Service.uploadFile(multipartFile);
+
+		// verifica se possui um usuário logado
+		UserSS user = UserService.authenticated();
+		if (user == null) {
+			throw new AuthorizationExceptionEmerson("Acesso negado");
+		}
+
+		URI uri = s3Service.uploadFile(multipartFile);
+
+		// na aula, a instanciação esta sendo feita com repo.findOne porém isso gera
+		// erro
+		Cliente cli = find(user.getId());
+		cli.setImageUrl(uri.toString());
+		repo.save(cli);
+
+		return uri;
 	}
 
 }
