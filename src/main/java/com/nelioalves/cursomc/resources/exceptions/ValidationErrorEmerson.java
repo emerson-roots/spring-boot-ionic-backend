@@ -9,19 +9,18 @@ public class ValidationErrorEmerson extends StandardErrorEmerson {
 
 	private List<FieldMessageEmerson> errors = new ArrayList<>();
 
-	public ValidationErrorEmerson(Integer status, String msg, Long timeStamp) {
-		super(status, msg, timeStamp);
+	//construtor modificado na aula 98
+	public ValidationErrorEmerson(Long timestamp, Integer status, String error, String message, String path) {
+		super(timestamp, status, error, message, path);
 	}
 
 	public List<FieldMessageEmerson> getErrors() {
 		return errors;
 	}
-	
-	//aula 40
+
+	// aula 40
 	public void addError(String fieldName, String message) {
 		errors.add(new FieldMessageEmerson(fieldName, message));
 	}
-	
-	
 
 }
