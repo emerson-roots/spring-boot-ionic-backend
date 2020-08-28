@@ -95,10 +95,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
 	}
 
+	/**
+	 * aula 68
+	 * 
+	 * ===========================
+	 * 
+	 * aula 100
+	 * 
+	 * na aula 100 o professor inclui uma alteração neste metodo para corrigir
+	 * problemas de cors. No teste realizado no video, causa um erro no postman
+	 * chamado "Invalid CORS request". No meu teste local este erro não foi gerado,
+	 * acredito ser devido a versão do framework
+	 * 
+	 * de qualquer forma, para aprendizado, foi implementado mesmo assim a correção
+	 * sugerida na aula 100
+	 * 
+	 * 
+	 */
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
+
+		CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
+		corsConfiguration.setAllowedMethods(Arrays.asList("POST","GET","DELETE","OPTIONS"));
 		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+		source.registerCorsConfiguration("/**", corsConfiguration);
 		return source;
 	}
 
