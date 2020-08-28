@@ -2,7 +2,9 @@ package com.nelioalves.cursomc.services;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -58,7 +60,7 @@ public class DBService {
 	private BCryptPasswordEncoder passwordEncoder;
 
 	public void instantiateTestDatabase() throws ParseException {
-		
+
 		Categoria cat1 = new Categoria(null, "Informática");
 		Categoria cat2 = new Categoria(null, "Escritório");
 		Categoria cat3 = new Categoria(null, "Cama mesa e banho");
@@ -109,6 +111,23 @@ public class DBService {
 		categoriaRepository.saveAll(Arrays.asList(cat1, cat2, cat3, cat4, cat5, cat6, cat7));
 		produtoRepository.saveAll(Arrays.asList(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11));
 
+		/**
+		 * aula 99
+		 * 
+		 * adiciona mais produtos para testar INFINITY SCROLL
+		 * 
+		 * ==================================================
+		 */
+		List<Produto> produtos = new ArrayList<Produto>();
+		for (int i = 12; i < 51; i++) {
+			Produto produto = new Produto(null, "Produto " + i, 10.00);
+			cat1.getProdutos().add(produto);
+			produto.getCategorias().add(cat1);
+			produtos.add(produto);
+		}
+		produtoRepository.saveAll(produtos);
+		// ==================================================
+
 		Estado est1 = new Estado(null, "Minas Gerais");
 		Estado est2 = new Estado(null, "São Paulo");
 
@@ -122,10 +141,12 @@ public class DBService {
 		estadoRepository.saveAll(Arrays.asList(est1, est2));
 		cidadeRepository.saveAll(Arrays.asList(c1, c2, c3));
 
-		Cliente cli1 = new Cliente(null, "Maria Silva", "emerson.lima.dev@gmail.com", "36378912377", TipoCliente.PESSOAFISICA, passwordEncoder.encode("123"));
+		Cliente cli1 = new Cliente(null, "Maria Silva", "emerson.lima.dev@gmail.com", "36378912377",
+				TipoCliente.PESSOAFISICA, passwordEncoder.encode("123"));
 		cli1.getTelefones().addAll(Arrays.asList("27363323", "93838393"));
-		
-		Cliente cli2 = new Cliente(null, "Aline Rodriguez", "emerson_sardinha@hotmail.com", "86232237056", TipoCliente.PESSOAFISICA, passwordEncoder.encode("123"));
+
+		Cliente cli2 = new Cliente(null, "Aline Rodriguez", "emerson_sardinha@hotmail.com", "86232237056",
+				TipoCliente.PESSOAFISICA, passwordEncoder.encode("123"));
 		cli2.getTelefones().addAll(Arrays.asList("12654798", "78023362"));
 		cli2.addPerfil(Perfil.ADMIN);
 
@@ -136,7 +157,7 @@ public class DBService {
 		cli1.getEnderecos().addAll(Arrays.asList(e1, e2));
 		cli2.getEnderecos().addAll(Arrays.asList(e3));
 
-		clienteRepository.saveAll(Arrays.asList(cli1,cli2));
+		clienteRepository.saveAll(Arrays.asList(cli1, cli2));
 		enderecoRepository.saveAll(Arrays.asList(e1, e2, e3));
 
 		// instancia pedidos
@@ -159,7 +180,6 @@ public class DBService {
 		ped2.setPagamento(pagto2);
 
 		cli1.getPedidos().addAll(Arrays.asList(ped1, ped2));
-
 
 		pedidoRepository.saveAll(Arrays.asList(ped1, ped2));
 		pagamentoRepository.saveAll(Arrays.asList(pagto1, pagto2));
