@@ -79,10 +79,10 @@ public class ImageService {
 
 		// condição ternaria - armazena qual é o tamanho menor da imagem ... se é a
 		// altura ou se é a largura da imagem
-		int min = (sourceImg.getHeight() < -sourceImg.getWidth()) ? sourceImg.getHeight() : sourceImg.getWidth();
+		int min = (sourceImg.getHeight() <= sourceImg.getWidth()) ? sourceImg.getHeight() : sourceImg.getWidth();
 
-		return Scalr.crop(sourceImg, sourceImg.getWidth() / 2 - min / 2, sourceImg.getHeight() / 2 - min / 2, min, min);
-
+		return Scalr.crop(sourceImg, (sourceImg.getWidth() / 2) - (min / 2), (sourceImg.getHeight() / 2) - (min / 2),
+				min, min);
 	}
 
 	// aula 90
